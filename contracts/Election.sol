@@ -16,6 +16,8 @@ contract Election {
 
   uint public candidatesCount;
 
+  event votedEvent(uint indexed _candidateId);
+
   constructor() public {
     /* public because constructor is going to run 
     when we deploy our contract to the blockchain */
@@ -31,8 +33,8 @@ contract Election {
 
   function vote(uint _candidateId) public {
     // require that haven't voted before
-    require(!voters[msg.sender]); // if false stops execution
-
+    require(!voters[msg.sender]);
+    
     // require a valid candidate
     require(_candidateId > 0 && _candidateId <= candidatesCount);
     // if execution stopped, gas will be refunded to the sender
@@ -43,5 +45,8 @@ contract Election {
 
     // update candidate vote count
     candidates[_candidateId].voteCount++;
+
+    // trigger voted event
+    emit votedEvent(_candidateId);
   }
 }
